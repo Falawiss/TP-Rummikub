@@ -51,8 +51,6 @@ class Pioche :
             tirage = self.pioche[-1]
             self.pioche = self.pioche[:-1]
             return tirage
-        else :
-            return None
 
 class Joueur :
     """
@@ -80,6 +78,7 @@ class Joueur :
     def tirer(self, nb_tuiles:int, pioche) :
         for t in range(nb_tuiles) :
             self.main.append(pioche.tirer())
+        self.nettoyer_main()
 
     def maj_score(self) :
         for t in self.main :
@@ -87,6 +86,7 @@ class Joueur :
                 self.score += 30
             else :
                 self.score += t.value
+        self.main = []
 
     def __str__(self) :
         txt = f"{self.nom} \nscore : {self.score} \nmain : "
@@ -169,38 +169,54 @@ class Partie :
             self.joueurs.append(Joueur(nom))
 
         self.nb_manches = nb_manches
-        self.manche = 0
         self.pioche = Pioche()
         self.time = 0.   
         self.table = Table()
 
         for m in range(nb_manches) :
+            self.manche = m
             self.start_manche()
+
 
     def start_manche(self) :
         self.distribuer()
-        for j in self.joueurs :
-            if j.num_tour == 0 or j.num_tour != 0 :
-                print(j)
-                choix = input("Un set de plus de 30 pts à poser ? o/n : ")
-                if choix == 'o' :
-                    set_choose = input("Donnez l'index des tuiles à sélectionner (2-5-12) : ")
-                    set_sel = []
-                    for s_c in set_choose.split('-') :
-                        set_sel.append(j.main[int(s_c)-1])
-                    Set_sel = Set(set_sel)
-                    if Set_sel.valeur_set() >= 30 :
-                        self.table.table.append(Set_sel)
+        tour = True
+        while tour :
+            for j in self.joueurs :
+                if j.num_tour == 0 or j.num_tour != 0 :
+                    print(j)
+                    choix = input("Un set de plus de 30 pts à poser ? o/n : ")
+                    if choix == 'o' :
+                        set_choose = input("Donnez l'index des tuiles à sélectionner (2-5-12) : ")
+                        set_sel = []
                         for s_c in set_choose.split('-') :
-                            j.main[int(s_c)-1] = None
-                        j.nettoyer_main()
+                            set_sel.append(j.main[int(s_c)-1])
+                        Set_sel = Set(set_sel)
+                        if Set_sel.valeur_set() >= 30 :
+                            self.table.table.append(Set_sel)
+                            for s_c in set_choose.split('-') :
+                                j.main[int(s_c)-1] = None
+                            j.nettoyer_main()
+                        else :
+                            j.tirer(1, self.pioche)
                     else :
                         j.tirer(1, self.pioche)
-                else :
-                    j.tirer(1, self.pioche)
-                
-                print(j)
-                print(self.table)
+                    
+                    print(j)
+                    print(self.table)
+                if len(j.main) == 0 :
+                    tour = False
+                    self.end_manche()
+
+    def end_manche(self) :
+        for j in self.joueur :
+            j.maj_score()
+        self.pioche = Pioche()
+        self.time = 0.
+        self.table = Table()
+
+        
+
                     
 
             
@@ -228,7 +244,7 @@ class Table :
             txt += s.__str__()
         return txt
 
-partie = Partie(["Serge", "Jean"], 1)
+partie = Partie(["Serge", "Jean"], 2)
 
 
 
