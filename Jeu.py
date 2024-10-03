@@ -45,9 +45,12 @@ class Pioche :
         np.random.shuffle(self.pioche)
 
     def tirer(self) :
-        tirage = self.pioche[-1]
-        self.pioche = self.pioche[:-1]
-        return tirage
+        if len(self.pioche) > 1 :
+            tirage = self.pioche[-1]
+            self.pioche = self.pioche[:-1]
+            return tirage
+        else :
+            return None
 
     
 
