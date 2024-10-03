@@ -1,4 +1,5 @@
-from csts import *
+import csts
+
 
 class Tuile :
     """
@@ -11,7 +12,7 @@ class Tuile :
         - color_name() : nom de la couleur
         - __str__() : affichage de la valeur avec la couleur associée
     """
-    def __init__(self, value, color) :
+    def __init__(self, value:int, color:int) :
         # Vérification des valeurs
         if (color in np.arange(0,5) and value in np.arange(0,14)) and ((color == 0 and value == 0) or (color != 0 and value != 0)) :
             self.color = color
@@ -21,10 +22,10 @@ class Tuile :
             self.value = None
     
     def color_name(self) :
-        return colors_name[self.color]
+        return csts.colors_name[self.color]
     
     def __str__(self) :
-        return f"{colors_code[self.color_name()]} {self.value} {colors_code['reset']}"
+        return f"{csts.colors_code[self.color_name()]} {self.value} {csts.colors_code['reset']}"
     
 class Pioche :
     """
@@ -75,7 +76,7 @@ class Joueur :
         self.num_tour = 0
 
 
-    def tirer(self, nb_tuiles, pioche) :
+    def tirer(self, nb_tuiles:int, pioche) :
         for t in range(nb_tuiles) :
             self.main.append(pioche.tirer())
 
@@ -102,7 +103,7 @@ class Set :
         - __init__() : création du set
 
     """
-    def __init__(self, lst_tuiles) :
+    def __init__(self, lst_tuiles:list) :
         self.nature = 'not a set'
         values = [t.value for t in lst_tuiles]
         colors = [t.color for t in lst_tuiles]
@@ -133,7 +134,7 @@ class Partie :
         - __init__() : création de la partie
         - start_manche() : remplis les mains des joueurs
     """
-    def __init__(self, lst_noms, nb_manches) :
+    def __init__(self, lst_noms:list, nb_manches:int) :
         self.joueurs = []
 
         for i in range(len(lst_noms)) :
@@ -151,6 +152,11 @@ class Partie :
     def start_manche(self) :
         self.distribuer()
 
+    def distribuer(self) :
+        for t in range(14) :
+            for j in self.joueurs :
+                j.tirer(1, self.pioche)
+
 
 class Table :
     """
@@ -162,4 +168,4 @@ class Table :
     """
     def __init__(self) :
         self.table = []
-        
+

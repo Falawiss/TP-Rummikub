@@ -11,7 +11,7 @@ colors_code = {
 }
 
 class Partie :
-    def __init__(self, lst_noms, nb_manches) :
+    def __init__(self, lst_noms:list, nb_manches:int) :
         self.joueurs = []
 
         for i in range(len(lst_noms)) :
@@ -35,12 +35,12 @@ class Partie :
         
 
 class Joueur :
-    def __init__(self, nom) :
+    def __init__(self, nom:str) :
         self.nom = nom
         self.main = []
         self.score = 0
 
-    def tirer(self, nb_tuiles, pioche) :
+    def tirer(self, nb_tuiles:int, pioche) :
         for t in range(nb_tuiles) :
             self.main.append(pioche.tirer())
 
