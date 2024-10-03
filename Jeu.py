@@ -48,10 +48,7 @@ class Pioche :
         tirage = self.pioche[-1]
         self.pioche = self.pioche[:-1]
         return tirage
-    
-pioche = Pioche()
-t = pioche.tirer()
-print(t)
+
     
 
 
