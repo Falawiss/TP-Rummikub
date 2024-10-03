@@ -150,3 +150,5 @@ class Partie :
 
     def start_manche(self) :
         self.distribuer()
+
+        
