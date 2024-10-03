@@ -104,10 +104,7 @@ class Joueur :
                 nouvelle_main.append(t)
         self.main = nouvelle_main
         
-        
-
-
-    
+          
 class Set :
     """
     Classe Set :
@@ -231,16 +228,17 @@ class Partie :
         self.time = 0.
         self.table = Table()
 
-        
-
-                    
-
-            
-
     def distribuer(self) :
         for t in range(14) :
             for j in self.joueurs :
                 j.tirer(1, self.pioche)
+
+    def piocher(self, joueur) :
+        joueur.tirer(1, self.pioche)
+    
+    def poser(self, set) :
+        self.table.table.append(set)
+
 
 
 class Table :
@@ -261,6 +259,7 @@ class Table :
         return txt
 
 partie = Partie(["Serge", "Jean"], 2)
+
 
 
 
