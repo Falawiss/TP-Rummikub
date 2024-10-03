@@ -147,6 +147,22 @@ class Set :
         for t in self.set :
             txt += t.__str__()
         return txt
+    
+    def ajoute_tuile(self, tuile, idx) :
+        new_set = []
+        for i in range(len(self.set)) :
+            if i == idx :
+                new_set.append(tuile)
+            else :
+                new_set.append(self.set[i])
+        self.set = new_set
+
+    def supprime_tuile(self, idx) :
+        new_set = []
+        for i in range(len(self.set)) :
+            if i != idx :
+                new_set.append(self.set[i])
+        self.set = new_set
 
 class Partie :
     """
