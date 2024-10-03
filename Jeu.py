@@ -114,3 +114,31 @@ class Set :
                 self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
         else :
             self.set = []
+
+class Partie :
+    """
+    Classe Partie :
+    Attributs :
+        - joueurs : liste de Joueurs
+        - nb_manches : int
+        - manche : int
+        - pioche : Pioche
+        - time : float
+    Methodes :
+        - __init__() : création de la partie
+        - start_manche() : remplis les mains des joueurs
+    """
+    def __init__(self, lst_noms, nb_manches) :
+        self.joueurs = []
+
+        for i in range(len(lst_noms)) :
+            nom = lst_noms[i]
+            self.joueurs.append(Joueur(nom))
+
+        self.nb_manches = nb_manches
+        self.manche = 0
+        self.pioche = Pioche()
+        self.time = 0.   
+
+    def start_manche(self) :
+        self.distribuer()
