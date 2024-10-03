@@ -59,6 +59,7 @@ class Joueur :
         - nom : string
         - main : liste de Tuiles
         - score : int
+        - num_tour : int
     Methodes :
         - __init__() : création du joueur
         - tirer() : tirer une tuile de la pioche, et l'ajouter à la main
@@ -71,6 +72,7 @@ class Joueur :
             self.nom = chr(64 + np.random.randint(26))
         self.main = []
         self.score = 0
+        self.num_tour = 0
 
 
     def tirer(self, nb_tuiles, pioche) :
@@ -86,6 +88,9 @@ class Joueur :
 
     def __str__(self) :
         return f"{self.nom} \nscore : {self.score} \nmain : {[t.__str__() for t in self.main]}"
+    
+    def reset_num_tour(self) :
+        self.num_tour = 0
     
 class Set :
     """
@@ -139,6 +144,9 @@ class Partie :
         self.manche = 0
         self.pioche = Pioche()
         self.time = 0.   
+
+        for m in range(nb_manches) :
+            self.start_manche()
 
     def start_manche(self) :
         self.distribuer()
