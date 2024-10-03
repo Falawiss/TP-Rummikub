@@ -117,18 +117,22 @@ class Set :
     """
     def __init__(self, lst_tuiles:list) :
         self.nature = 'not a set'
+        self.colors = []
+        self.extrems = [None, None]
         values = [t.value for t in lst_tuiles]
         colors = [t.color for t in lst_tuiles]
         np.sort(values)
         if len(lst_tuiles) > 2 :
             if np.max(values) - np.min(values) == len(values)-1 :
                 self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
-                self.nature = 'serie'
+                self.nature = 'suite'
+                self.extrems = [np.max(values)+1, np.min(values)-1]
             elif len(np.unique(colors)) == len(lst_tuiles) :
-                if self.nature == 'serie' :
+                if self.nature == 'suite' :
                     self.nature = 'serie_suite'
                 else :
-                    self.nature = 'suite'
+                    self.nature = 'serie'
+                self.color = np.unique(colors)
                 self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
         else :
             self.set = []
@@ -146,20 +150,22 @@ class Set :
         return txt
     
     def ajoute_tuile(self, tuile, idx) :
-        new_set = []
-        for i in range(len(self.set)) :
-            if i == idx :
-                new_set.append(tuile)
-            else :
-                new_set.append(self.set[i])
-        self.set = new_set
+        if (tuile.color not in self.color and "serie" in self.nature)  or (tuile.value in self.extrems and "suite" in self.nature) :
+            new_set = []
+            for i in range(len(self.set)) :
+                if i == idx :
+                    new_set.append(tuile)
+                else :
+                    new_set.append(self.set[i])
+            self.set = new_set
 
     def supprime_tuile(self, idx) :
-        new_set = []
-        for i in range(len(self.set)) :
-            if i != idx :
-                new_set.append(self.set[i])
-        self.set = new_set
+        if len(self.set) > 3 :
+            new_set = []
+            for i in range(len(self.set)) :
+                if i != idx :
+                    new_set.append(self.set[i])
+            self.set = new_set
 
 class Partie :
     """
@@ -196,8 +202,8 @@ class Partie :
         tour = True
         while tour :
             for j in self.joueurs :
-                if j.num_tour == 0 or j.num_tour != 0 :
-                    print(j)
+                print(j)
+                if j.num_tour == 0:
                     choix = input("Un set de plus de 30 pts à poser ? o/n : ")
                     if choix == 'o' :
                         set_choose = input("Donnez l'index des tuiles à sélectionner (2-5-12) : ")
@@ -206,7 +212,7 @@ class Partie :
                             set_sel.append(j.main[int(s_c)-1])
                         Set_sel = Set(set_sel)
                         if Set_sel.valeur_set() >= 30 :
-                            self.table.table.append(Set_sel)
+                            self.poser(Set_sel)
                             for s_c in set_choose.split('-') :
                                 j.main[int(s_c)-1] = None
                             j.nettoyer_main()
@@ -215,8 +221,8 @@ class Partie :
                     else :
                         j.tirer(1, self.pioche)
                     
-                    print(j)
-                    print(self.table)
+                print(j)
+                print(self.table)
                 if len(j.main) == 0 :
                     tour = False
                     self.end_manche()
@@ -237,7 +243,7 @@ class Partie :
         joueur.tirer(1, self.pioche)
     
     def poser(self, set) :
-        self.table.table.append(set)
+        self.table.poser(set)
 
 
 
@@ -251,12 +257,19 @@ class Table :
     """
     def __init__(self) :
         self.table = []
+        self.table_creation = []
 
     def __str__(self) :
-        txt = f"Table : "
+        txt = f"------------------------\nTable : "
         for s in self.table :
             txt += s.__str__()
-        return txt
+        return txt + "\n------------------------"
+    
+    def poser(self, set) :
+        self.table.append(set)
+
+
+
 
 partie = Partie(["Serge", "Jean"], 2)
 
