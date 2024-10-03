@@ -87,4 +87,30 @@ class Joueur :
     def __str__(self) :
         return f"{self.nom} \nscore : {self.score} \nmain : {[t.__str__() for t in self.main]}"
     
+class Set :
+    """
+    Classe Set :
+    Attributs :
+        - nature : string (serie, suite, serie_suite, not a set)
+        - set : liste de Tuiles
+    Methodes :
+        - __init__() : création du set
 
+    """
+    def __init__(self, lst_tuiles) :
+        self.nature = 'not a set'
+        values = [t.value for t in lst_tuiles]
+        colors = [t.color for t in lst_tuiles]
+        np.sort(values)
+        if len(lst_tuiles) > 2 :
+            if np.max(values) - np.min(values) == len(values)-1 :
+                self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
+                self.nature = 'serie'
+            elif len(np.unique(colors)) == 1 :
+                if self.nature == 'serie' :
+                    self.nature = 'serie_suite'
+                else :
+                    self.nature = 'suite'
+                self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
+        else :
+            self.set = []
