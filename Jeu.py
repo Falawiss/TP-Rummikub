@@ -1,4 +1,5 @@
 import csts
+np = csts.np
 
 
 class Tuile :
@@ -88,10 +89,15 @@ class Joueur :
                 self.score += t.value
 
     def __str__(self) :
-        return f"{self.nom} \nscore : {self.score} \nmain : {[t.__str__() for t in self.main]}"
+        txt = f"{self.nom} \nscore : {self.score} \nmain : "
+        for t in self.main :
+            txt += t.__str__()
+        return txt
     
     def reset_num_tour(self) :
         self.num_tour = 0
+
+
     
 class Set :
     """
@@ -145,12 +151,16 @@ class Partie :
         self.manche = 0
         self.pioche = Pioche()
         self.time = 0.   
+        self.table = Table()
 
         for m in range(nb_manches) :
             self.start_manche()
 
     def start_manche(self) :
         self.distribuer()
+        for j in self.joueurs :
+
+            print(j)
 
     def distribuer(self) :
         for t in range(14) :
@@ -168,4 +178,10 @@ class Table :
     """
     def __init__(self) :
         self.table = []
+
+partie = Partie(["Serge", "Jean"], 1)
+
+
+
+    
 
