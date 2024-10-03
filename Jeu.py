@@ -220,6 +220,30 @@ class Partie :
                             j.tirer(1, self.pioche)
                     else :
                         j.tirer(1, self.pioche)
+
+                else :
+                    sel_tuiles = []
+                    sel_main = input("Tuiles à sélectionner dans la Main (2-5-12) : ")
+                    for s in sel_main.split('-') :
+                        sel_tuiles.append(j.main[int(s)])
+
+                    print(sel_tuiles)
+
+                    sel_set = input("Set à sélectionner sur la Table (1) : ")
+                    sel_set = []
+                    for s in sel_set.split('-') :
+                        sel_set.append(self.table.table[s])
+
+                    print(sel_set)
+                    
+                    sel_tuile_set = input("Tuiles à sélectionner dans ce Set (2-5-12) :")
+                    for s in sel_tuile_set.split('-') :
+                        sel_tuiles.append(sel_set.set[s])
+
+                    print(sel_tuiles)
+
+
+                    
                     
                 print(j)
                 print(self.table)
