@@ -97,6 +97,15 @@ class Joueur :
     def reset_num_tour(self) :
         self.num_tour = 0
 
+    def nettoyer_main(self) :
+        nouvelle_main = []
+        for t in self.main :
+            if t != None :
+                nouvelle_main.append(t)
+        self.main = nouvelle_main
+        
+        
+
 
     
 class Set :
@@ -118,7 +127,7 @@ class Set :
             if np.max(values) - np.min(values) == len(values)-1 :
                 self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
                 self.nature = 'serie'
-            elif len(np.unique(colors)) == 1 :
+            elif len(np.unique(colors)) == len(lst_tuiles) :
                 if self.nature == 'serie' :
                     self.nature = 'serie_suite'
                 else :
@@ -126,6 +135,18 @@ class Set :
                 self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
         else :
             self.set = []
+
+    def valeur_set(self) :
+        somme = 0
+        for t in self.set :
+            somme += t.value
+        return somme
+    
+    def __str__(self) :
+        txt = ''
+        for t in self.set :
+            txt += t.__str__()
+        return txt
 
 class Partie :
     """
@@ -159,8 +180,30 @@ class Partie :
     def start_manche(self) :
         self.distribuer()
         for j in self.joueurs :
+            if j.num_tour == 0 or j.num_tour != 0 :
+                print(j)
+                choix = input("Un set de plus de 30 pts à poser ? o/n : ")
+                if choix == 'o' :
+                    set_choose = input("Donnez l'index des tuiles à sélectionner (2-5-12) : ")
+                    set_sel = []
+                    for s_c in set_choose.split('-') :
+                        set_sel.append(j.main[int(s_c)-1])
+                    Set_sel = Set(set_sel)
+                    if Set_sel.valeur_set() >= 30 :
+                        self.table.table.append(Set_sel)
+                        for s_c in set_choose.split('-') :
+                            j.main[int(s_c)-1] = None
+                        j.nettoyer_main()
+                    else :
+                        j.tirer(1, self.pioche)
+                else :
+                    j.tirer(1, self.pioche)
+                
+                print(j)
+                print(self.table)
+                    
 
-            print(j)
+            
 
     def distribuer(self) :
         for t in range(14) :
@@ -178,6 +221,12 @@ class Table :
     """
     def __init__(self) :
         self.table = []
+
+    def __str__(self) :
+        txt = f"Table : "
+        for s in self.table :
+            txt += s.__str__()
+        return txt
 
 partie = Partie(["Serge", "Jean"], 1)
 
