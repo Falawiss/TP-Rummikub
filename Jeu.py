@@ -151,4 +151,15 @@ class Partie :
     def start_manche(self) :
         self.distribuer()
 
+
+class Table :
+    """
+    Classe Table :
+    Attributs :
+        - table : liste de Sets
+    Methodes :
+        - __init__() : création de la Table
+    """
+    def __init__(self) :
+        self.table = []
         
