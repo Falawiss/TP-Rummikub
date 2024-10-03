@@ -7,7 +7,7 @@ colors_code = {
     'bleu': '\033[94m',
     'noir': '\033[30m',
     'joker': '\033[35m',
-    'reset': '\033[0m'  # Réinitialiser la couleur
+    'reset': '\033[0m'  
 }
 
 class Partie :
@@ -24,12 +24,14 @@ class Partie :
         self.time = 0
         self.table = Table(10)
 
-        self.distribuer()
-
     def distribuer(self) :
         for t in range(14) :
             for j in self.joueurs :
                 j.tirer(1, self.pioche)
+
+    def manche(self) :
+        self.distribuer()
+
         
 
 class Joueur :
@@ -41,6 +43,13 @@ class Joueur :
     def tirer(self, nb_tuiles, pioche) :
         for t in range(nb_tuiles) :
             self.main.append(pioche.tirer())
+
+    def maj_score(self) :
+        for t in self.main :
+            if t.value == 0 :
+                self.score += 30
+            else :
+                self.score += t.value
 
 
 
