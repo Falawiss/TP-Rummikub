@@ -122,49 +122,50 @@ class Set :
     """
     def __init__(self, lst_tuiles) :
         self.set = lst_tuiles
-        self.values = np.array([t.value for t in lst_tuiles])
-        self.colors = np.array([t.color for t in lst_tuiles])
+        values = np.array([t.value for t in lst_tuiles])
+        colors = np.array([t.color for t in lst_tuiles])
+        self.vc = np.vstack((values, colors))
         self.nature = 'not a set'
         self.check_set()
 
     def check_set(self) :
-        if len(self.values) == len(np.arange(np.min(self.values), np.max(self.values)+1)) and len(np.unique(self.colors)) == 1:
-            self.nature = 'suite'
-            self.sort_values()
-        elif len(np.unique(self.colors)) == len(self.set) and len(np.unique(self.values)) == 1 :
-            self.nature = 'serie'
-            self.sort_colors()
+        if len(self.set) >= 3 :
+            if 0 not in self.vc[0] :
+                if len(self.vc[0]) == len(np.arange(np.min(self.vc[0]), np.max(self.vc[0])+1)) and len(np.unique(self.vc[1])) == 1 :
+                    self.nature = 'suite'
+                elif len(np.unique(self.vc[1])) == len(self.set) and len(np.unique(self.vc[0])) == 1 :
+                    self.nature = 'serie'
+                else :
+                    self.nature = 'not a set'
         else :
             self.nature = 'not a set'
+        self.sort()
 
     def ajoute_tuile(self, tuile) :
         self.set.append(tuile)
+        self.reset_vc(self.set)
         self.check_set()
 
     def enleve_tuile(self, idx) :
         n_set = []
         for i in range(len(self.set)) :
-            if i != idx :
+            if i != idx -1 :
                 n_set.append(self.set[i])
         self.reset_vc(n_set)
         self.check_set()
 
-    def sort_colors(self) :
-        ord_set = []
-        for c in self.colors :
-            ord_set.append(Tuile(self.values[0],c))
-        self.reset_vc(ord_set)
-
-    def sort_values(self) :
-        ord_set = []
-        for v in self.values :
-            ord_set.append(Tuile(v,self.colors[0]))
-        self.reset_vc(ord_set)
+    def sort(self) : 
+        self.vc = np.sort(self.vc)
+        n_set = []
+        for i in range(len(self.vc[0])) :
+            n_set.append(Tuile(self.vc[0,i], self.vc[1,i]))
+        self.set = n_set
 
     def reset_vc(self, lst_tuiles) :
         self.set = lst_tuiles
-        self.values = np.array([t.value for t in lst_tuiles])
-        self.colors = np.array([t.color for t in lst_tuiles])
+        self.vc = np.zeros((2,len(self.set)), dtype=int)
+        self.vc[0] = np.array([t.value for t in lst_tuiles])
+        self.vc[1] = np.array([t.color for t in lst_tuiles])
     
     def valeur_set(self) :
         somme = 0
@@ -176,7 +177,7 @@ class Set :
         txt = ''
         for t in self.set :
             txt += t.__str__()
-        return txt + self.nature
+        return txt + " | " + self.nature
         
 
 class Partie :
@@ -245,16 +246,27 @@ class Partie :
                             print(t, end='')
 
                         sel_set = input("Sets à sélectionner sur la Table (1-3) : ")
+                        sel_tuile_set = []
                         for s in sel_set.split('-') :
                             sel_Set = self.table.table[int(sel_set)-1]
-                            print(sel_Set.set)
+                            print(sel_Set)
 
-                            sel_tuile_set = input("Tuiles à sélectionner dans ce Set (2-5-12) :")
-                            for t in sel_tuile_set.split('-') :
+                            sel_tuile_set.append(input("Tuiles à sélectionner dans ce Set (1-2-4) :"))
+                            for t in sel_tuile_set[-1].split('-') :
                                 sel_tuiles.append(sel_Set.set[int(t)-1])
 
-                        for t in sel_tuiles :
-                            print(t, end='')
+                        final_Set = Set(sel_tuiles)
+                        print(final_Set)
+
+                        print(sel_main, sel_set, sel_tuile_set)
+                        #if final_Set.nature != "not a set" :
+                        for n in range(len(sel_set.split('-'))) :
+                            s = sel_set.split('-')[n]
+                            left_Set = self.table.table[int(s)-1]
+                            for idx in sel_tuile_set[n].split('-') :
+                                left_Set.enleve_tuile(idx)
+                            #if left_Set.nature == "not a set" :
+                            print(left_Set, self.table.table[int(s)-1])
 
                 print(j)
                 print(self.table)
@@ -304,6 +316,15 @@ class Table :
         self.table.append(set)
 
 
+t1 = Tuile(1,2)
+t2 = Tuile(2,2)
+t3 = Tuile(3,2)
+set1 = Set([t1, t2, t3])
+print(set1)
+set1.enleve_tuile(2)
+print(set1)
+set1.ajoute_tuile(t2)
+print(set1)
 
 
 partie = Partie(["Serge", "Jean"], 2)
