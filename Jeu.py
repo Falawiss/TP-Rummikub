@@ -1,6 +1,11 @@
 import csts
 np = csts.np
 
+# Alors alors, 
+# Lorsque l'utilisateur choisi des tuiles, il peut renseigner 2 foix la même, pas bien
+# Il faut mettre à jour la table lors d'une modification
+# Ajouter toutes les vérifications de validité
+
 
 class Tuile :
     """
