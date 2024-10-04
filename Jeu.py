@@ -26,7 +26,8 @@ class Tuile :
         return csts.colors_name[self.color]
     
     def __str__(self) :
-        return f"{csts.colors_code[self.color_name()]} {self.value} {csts.colors_code['reset']}"
+        ajout = (len(str(self.value))%2)*" "
+        return f"{csts.colors_code[self.color_name()]} {ajout}{self.value}{csts.colors_code['reset']}"
     
 class Pioche :
     """
@@ -89,7 +90,11 @@ class Joueur :
         self.main = []
 
     def __str__(self) :
-        txt = f"{self.nom} \nscore : {self.score} \nmain : "
+        txt = f"{self.nom} | Tour n°{self.num_tour}\nscore : {self.score} \nmain : \n|"
+        for i in range(1,len(self.main)+1) :
+            ajout = (len(str(i))%2)*" "
+            txt += f"{i}{ajout}|"
+        txt += '\n'
         for t in self.main :
             txt += t.__str__()
         return txt
@@ -115,57 +120,64 @@ class Set :
         - __init__() : création du set
 
     """
-    def __init__(self, lst_tuiles:list) :
+    def __init__(self, lst_tuiles) :
+        self.set = lst_tuiles
+        self.values = np.array([t.value for t in lst_tuiles])
+        self.colors = np.array([t.color for t in lst_tuiles])
         self.nature = 'not a set'
-        self.colors = []
-        self.extrems = [None, None]
-        values = [t.value for t in lst_tuiles]
-        colors = [t.color for t in lst_tuiles]
-        np.sort(values)
-        if len(lst_tuiles) > 2 :
-            if np.max(values) - np.min(values) == len(values)-1 :
-                self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
-                self.nature = 'suite'
-                self.extrems = [np.max(values)+1, np.min(values)-1]
-            elif len(np.unique(colors)) == len(lst_tuiles) :
-                if self.nature == 'suite' :
-                    self.nature = 'serie_suite'
-                else :
-                    self.nature = 'serie'
-                self.color = np.unique(colors)
-                self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
-        else :
-            self.set = []
+        self.check_set()
 
+    def check_set(self) :
+        if len(self.values) == len(np.arange(np.min(self.values), np.max(self.values)+1)) and len(np.unique(self.colors)) == 1:
+            self.nature = 'suite'
+            self.sort_values()
+        elif len(np.unique(self.colors)) == len(self.set) and len(np.unique(self.values)) == 1 :
+            self.nature = 'serie'
+            self.sort_colors()
+        else :
+            self.nature = 'not a set'
+
+    def ajoute_tuile(self, tuile) :
+        self.set.append(tuile)
+        self.check_set()
+
+    def enleve_tuile(self, idx) :
+        n_set = []
+        for i in range(len(self.set)) :
+            if i != idx :
+                n_set.append(self.set[i])
+        self.reset_vc(n_set)
+        self.check_set()
+
+    def sort_colors(self) :
+        ord_set = []
+        for c in self.colors :
+            ord_set.append(Tuile(self.values[0],c))
+        self.reset_vc(ord_set)
+
+    def sort_values(self) :
+        ord_set = []
+        for v in self.values :
+            ord_set.append(Tuile(v,self.colors[0]))
+        self.reset_vc(ord_set)
+
+    def reset_vc(self, lst_tuiles) :
+        self.set = lst_tuiles
+        self.values = np.array([t.value for t in lst_tuiles])
+        self.colors = np.array([t.color for t in lst_tuiles])
+    
     def valeur_set(self) :
         somme = 0
         for t in self.set :
             somme += t.value
         return somme
-    
+
     def __str__(self) :
         txt = ''
         for t in self.set :
             txt += t.__str__()
-        return txt
-    
-    def ajoute_tuile(self, tuile, idx) :
-        if (tuile.color not in self.color and "serie" in self.nature)  or (tuile.value in self.extrems and "suite" in self.nature) :
-            new_set = []
-            for i in range(len(self.set)) :
-                if i == idx :
-                    new_set.append(tuile)
-                else :
-                    new_set.append(self.set[i])
-            self.set = new_set
-
-    def supprime_tuile(self, idx) :
-        if len(self.set) > 3 :
-            new_set = []
-            for i in range(len(self.set)) :
-                if i != idx :
-                    new_set.append(self.set[i])
-            self.set = new_set
+        return txt + self.nature
+        
 
 class Partie :
     """
@@ -199,56 +211,55 @@ class Partie :
 
     def start_manche(self) :
         self.distribuer()
-        tour = True
-        while tour :
+        gagnant = False
+        while not gagnant :
             for j in self.joueurs :
                 print(j)
                 if j.num_tour == 0:
-                    choix = input("Un set de plus de 30 pts à poser ? o/n : ")
-                    if choix == 'o' :
-                        set_choose = input("Donnez l'index des tuiles à sélectionner (2-5-12) : ")
+                    set_choose = input("Tuiles à sélectionner dans la Main (2-5-12) : ")
+                    if set_choose != '' :
                         set_sel = []
                         for s_c in set_choose.split('-') :
                             set_sel.append(j.main[int(s_c)-1])
                         Set_sel = Set(set_sel)
-                        if Set_sel.valeur_set() >= 30 :
+                        print(Set_sel)
+                        if Set_sel.valeur_set() >= 3 and Set_sel.nature in ['serie', 'suite']: 
                             self.poser(Set_sel)
                             for s_c in set_choose.split('-') :
                                 j.main[int(s_c)-1] = None
                             j.nettoyer_main()
+                            j.num_tour += 1
                         else :
                             j.tirer(1, self.pioche)
                     else :
                         j.tirer(1, self.pioche)
 
                 else :
-                    sel_tuiles = []
                     sel_main = input("Tuiles à sélectionner dans la Main (2-5-12) : ")
-                    for s in sel_main.split('-') :
-                        sel_tuiles.append(j.main[int(s)])
+                    if sel_main != '' :
+                        sel_tuiles = []
+                        for s in sel_main.split('-') :
+                            sel_tuiles.append(j.main[int(s)-1])
 
-                    print(sel_tuiles)
+                        for t in sel_tuiles :
+                            print(t, end='')
 
-                    sel_set = input("Set à sélectionner sur la Table (1) : ")
-                    sel_set = []
-                    for s in sel_set.split('-') :
-                        sel_set.append(self.table.table[s])
+                        sel_set = input("Sets à sélectionner sur la Table (1-3) : ")
+                        for s in sel_set.split('-') :
+                            sel_Set = self.table.table[int(sel_set)-1]
+                            print(sel_Set.set)
 
-                    print(sel_set)
-                    
-                    sel_tuile_set = input("Tuiles à sélectionner dans ce Set (2-5-12) :")
-                    for s in sel_tuile_set.split('-') :
-                        sel_tuiles.append(sel_set.set[s])
+                            sel_tuile_set = input("Tuiles à sélectionner dans ce Set (2-5-12) :")
+                            for t in sel_tuile_set.split('-') :
+                                sel_tuiles.append(sel_Set.set[int(t)-1])
 
-                    print(sel_tuiles)
+                        for t in sel_tuiles :
+                            print(t, end='')
 
-
-                    
-                    
                 print(j)
                 print(self.table)
                 if len(j.main) == 0 :
-                    tour = False
+                    gagnant = False
                     self.end_manche()
 
     def end_manche(self) :
@@ -284,10 +295,10 @@ class Table :
         self.table_creation = []
 
     def __str__(self) :
-        txt = f"------------------------\nTable : "
+        txt = f"------------------------\nTable :\n"
         for s in self.table :
-            txt += s.__str__()
-        return txt + "\n------------------------"
+            txt += f"{s.__str__()} \n"
+        return txt + "------------------------"
     
     def poser(self, set) :
         self.table.append(set)

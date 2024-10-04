@@ -102,3 +102,57 @@ class Set :
                 self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
         else :
             self.set = []
+
+class Set :
+    def __init__(self, lst_tuiles:list) :
+        self.nature = 'not a set'
+        self.colors = []
+        self.extrems = [None, None]
+        values = [t.value for t in lst_tuiles]
+        colors = [t.color for t in lst_tuiles]
+        np.sort(values)
+        self.set = []
+        if len(lst_tuiles) > 2 :
+            """
+            if np.max(values) - np.min(values) == len(values)-1 and len(np.unique(colors)) == 1:
+                self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
+                self.nature = 'suite'
+                self.extrems = [np.max(values)+1, np.min(values)-1]
+            elif len(np.unique(colors)) == len(lst_tuiles) and np.unique(values) == 1 :
+                self.nature = 'serie'
+                self.color = np.unique(colors)
+                self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
+            """
+            self.set = [Tuile(values[t],colors[t]) for t in range(len(lst_tuiles))]
+            self.nature = 'suite'
+            
+
+    def valeur_set(self) :
+        somme = 0
+        for t in self.set :
+            somme += t.value
+        return somme
+    
+    def __str__(self) :
+        txt = ''
+        for t in self.set :
+            txt += t.__str__()
+        return txt
+    
+    def ajoute_tuile(self, tuile, idx) :
+        if (tuile.color not in self.color and "serie" in self.nature)  or (tuile.value in self.extrems and "suite" in self.nature) :
+            new_set = []
+            for i in range(len(self.set)) :
+                if i == idx :
+                    new_set.append(tuile)
+                else :
+                    new_set.append(self.set[i])
+            self.set = new_set
+
+    def supprime_tuile(self, idx) :
+        if len(self.set) > 3 :
+            new_set = []
+            for i in range(len(self.set)) :
+                if i != idx :
+                    new_set.append(self.set[i])
+            self.set = new_set
