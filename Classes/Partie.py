@@ -91,7 +91,7 @@ class Partie :
                 else :
                     validity = False
 
-                if final_choice.valeur_set() < 3 and j.num_tour == 0 :
+                if final_choice.valeur_set() < 30 and j.num_tour == 0 :
                     validity = False
 
                 if validity :
