@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 import numpy as np
 
-import csts
+import Classes.csts as csts
 
 class InputDialog(QDialog):
     def __init__(self):
