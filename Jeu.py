@@ -113,6 +113,11 @@ class Joueur :
             if t != None :
                 nouvelle_main.append(t)
         self.main = nouvelle_main
+
+    def copy(self) :
+        n_j = Joueur(self.nom)
+        n_j.main = self.main.copy()
+        return n_j
         
           
 class Set :
@@ -221,63 +226,74 @@ class Partie :
         while not gagnant :
             for j in self.joueurs :
                 print(j)
-                if j.num_tour == 0:
-                    set_choose = input("Tuiles à sélectionner dans la Main (2-5-12) : ")
-                    if set_choose != '' :
-                        set_sel = []
-                        for s_c in set_choose.split('-') :
-                            set_sel.append(j.main[int(s_c)-1])
-                        Set_sel = Set(set_sel)
-                        print(Set_sel)
-                        if Set_sel.valeur_set() >= 3 and Set_sel.nature in ['serie', 'suite']: 
-                            self.poser(Set_sel)
-                            for s_c in set_choose.split('-') :
-                                j.main[int(s_c)-1] = None
-                            j.nettoyer_main()
-                            j.num_tour += 1
-                        else :
-                            j.tirer(1, self.pioche)
-                    else :
-                        j.tirer(1, self.pioche)
 
+                j_virtuel = j.copy()
+                table_virtuel = self.table.copy()
+                choice = []
+                
+
+                set_choice = input("Tuiles à sélectionner dans la Main : ")
+                if set_choice != '' :
+                    for i in set_choice.split('-') :
+                        choice.append(j_virtuel.main[int(i)-1])
+                        j_virtuel.main[int(i)-1] = None
+                    j_virtuel.nettoyer_main()
+
+
+                if j.num_tour != 0 :
+                    table_set_choice = input("Sets à sélectionner sur la Table : ")
+                    if table_set_choice != '' :
+                        for i in table_set_choice.split('-') :
+                            table_set = table_virtuel[int(i)-1]
+                            print(table_set)
+                            table_choice = input("Tuiles à sélectionner dans le Set : ")
+                            if table_choice != '' :
+                                for j in table_choice.split('-') :
+                                    choice.append(table_set[int(j)-1])
+                                    table_set.enleve_tuile([int(j)-1])
+                    
+                    return_choice = input("Compléter des sets de la table ? o/n : ")
+                    while return_choice not in ['', 'n', 'N'] :
+                        return_choice = input("Tuile de la main à reposer dans un autre set : ")
+                        return_set_destination = input('Set de la table à compléter : ')
+                        if return_choice != '' and return_set_destination != '' :
+                            table_virtuel[int(return_set_destination-1)].ajoute_tuile(j_virtuel.main[int(return_choice)])
+                
+                final_choice = Set(choice)
+                print("FINAL CHOICE : ",final_choice)
+                validity = True
+                if final_choice.nature != 'not a set' :
+                    for table_set in table_virtuel :
+                        table_set.check_set()
+                        if table_set.nature == 'not a set' :
+                            validity = False
                 else :
-                    sel_main = input("Tuiles à sélectionner dans la Main (2-5-12) : ")
-                    if sel_main != '' :
-                        sel_tuiles = []
-                        for s in sel_main.split('-') :
-                            sel_tuiles.append(j.main[int(s)-1])
+                    validity = False
 
-                        for t in sel_tuiles :
-                            print(t, end='')
+                if final_choice.valeur_set() < 3 and j.num_tour == 0 :
+                    validity = False
 
-                        sel_set = input("Sets à sélectionner sur la Table (1-3) : ")
-                        sel_tuile_set = []
-                        for s in sel_set.split('-') :
-                            sel_Set = self.table.table[int(sel_set)-1]
-                            print(sel_Set)
+                if validity :
+                    j.main = j_virtuel.main
+                    self.table.table = table_virtuel
+                    self.table.table.append(final_choice)
+                    j.num_tour += 1
+                else :
+                    j.tirer(1, self.pioche)
+                
 
-                            sel_tuile_set.append(input("Tuiles à sélectionner dans ce Set (1-2-4) :"))
-                            for t in sel_tuile_set[-1].split('-') :
-                                sel_tuiles.append(sel_Set.set[int(t)-1])
-
-                        final_Set = Set(sel_tuiles)
-                        print(final_Set)
-
-                        print(sel_main, sel_set, sel_tuile_set)
-                        #if final_Set.nature != "not a set" :
-                        for n in range(len(sel_set.split('-'))) :
-                            s = sel_set.split('-')[n]
-                            left_Set = self.table.table[int(s)-1]
-                            for idx in sel_tuile_set[n].split('-') :
-                                left_Set.enleve_tuile(idx)
-                            #if left_Set.nature == "not a set" :
-                            print(left_Set, self.table.table[int(s)-1])
+                print("VALIDITY : ", validity)
 
                 print(j)
                 print(self.table)
+
                 if len(j.main) == 0 :
-                    gagnant = False
+                    gagnant = True
+                    print(f"FIN DE LA MANCHE !! {j.nom} a gagné")
                     self.end_manche()
+
+                else :
+                    print("\n\n -- CHANGEMENT DE JOUEUR -- \n\n")
 
     def end_manche(self) :
         for j in self.joueur :
@@ -285,6 +301,10 @@ class Partie :
         self.pioche = Pioche()
         self.time = 0.
         self.table = Table()
+
+        continuer = input("Voulez-vous refaire une manche ? o/n : ")
+        if continuer in ['o','O'] :
+            self.start_manche()
 
     def distribuer(self) :
         for t in range(14) :
@@ -319,6 +339,9 @@ class Table :
     
     def poser(self, set) :
         self.table.append(set)
+
+    def copy(self) :
+        return self.table.copy()
 
 
 t1 = Tuile(1,2)
