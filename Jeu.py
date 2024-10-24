@@ -150,13 +150,11 @@ class Set :
                 else :
                     self.nature = 'not a set'
             else :
-                set_no_joker = self.vc[0][self.vc[0]!=0]
-                if len(np.unique(self.vc[1])) == len(self.set) and len(np.unique(set_no_joker)) == 1 :
+                set_no_joker = self.vc[:,self.vc[0]!=0]
+                if len(np.unique(self.vc[1])) == len(self.set) and len(np.unique(set_no_joker[0])) == 1 :
                     self.nature = 'serie'
-                if len(np.unique(set_no_joker)) == 1 :
-                    if len(self.vc[0]) == len(np.arange(np.min(self.vc[0]), np.max(self.vc[0])+1)) :
-                        self.nature = 'suite'
-                    elif np.max(set_no_joker) - np.min(set_no_joker) == len(self.vc[0]) and np.unique(set_no_joker) == len(set_no_joker) :
+                if len(np.unique(set_no_joker[1])) == 1 :
+                    if np.max(set_no_joker[0]) - np.min(set_no_joker[0]) == len(self.vc[0]) and np.unique(set_no_joker[0]) == len(set_no_joker[0]) :
                         self.nature = 'suite'
                     else :
                         self.nature = 'serie'
