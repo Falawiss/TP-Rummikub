@@ -1,5 +1,7 @@
 import csts
-np = csts.np
+import numpy as np
+import PyQt5
+
 
 # Alors alors, 
 # Lorsque l'utilisateur choisi des tuiles, il peut renseigner 2 foix la même, pas bien
@@ -147,6 +149,17 @@ class Set :
                     self.nature = 'serie'
                 else :
                     self.nature = 'not a set'
+            else :
+                set_no_joker = self.vc[0][self.vc[0]!=0]
+                if len(np.unique(self.vc[1])) == len(self.set) and len(np.unique(set_no_joker)) == 1 :
+                    self.nature = 'serie'
+                if len(np.unique(set_no_joker)) == 1 :
+                    if len(self.vc[0]) == len(np.arange(np.min(self.vc[0]), np.max(self.vc[0])+1)) :
+                        self.nature = 'suite'
+                    elif np.max(set_no_joker) - np.min(set_no_joker) == len(self.vc[0]) and np.unique(set_no_joker) == len(set_no_joker) :
+                        self.nature = 'suite'
+                    else :
+                        self.nature = 'serie'
         else :
             self.nature = 'not a set'
         self.sort()
@@ -342,17 +355,6 @@ class Table :
 
     def copy(self) :
         return self.table.copy()
-
-
-t1 = Tuile(1,2)
-t2 = Tuile(2,2)
-t3 = Tuile(3,2)
-set1 = Set([t1, t2, t3])
-print(set1)
-set1.enleve_tuile(2)
-print(set1)
-set1.ajoute_tuile(t2)
-print(set1)
 
 
 partie = Partie(["Serge", "Jean"], 2)
