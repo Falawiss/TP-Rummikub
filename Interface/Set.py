@@ -45,7 +45,7 @@ class Set :
                         self.nature = 'serie'
         else :
             self.nature = 'not a set'
-        self.sort()
+        #self.sort()
 
     def ajoute_tuile(self, tuile) :
         self.set.append(tuile)
@@ -60,12 +60,9 @@ class Set :
         self.reset_vc(n_set)
         self.check_set()
 
-    def sort(self) : 
-        self.vc = np.sort(self.vc)
-        n_set = []
-        for i in range(len(self.vc[0])) :
-            n_set.append(Tuile(self.vc[0,i], self.vc[1,i]))
-        self.set = n_set
+    #def sort(self) : 
+        
+
 
     def reset_vc(self, lst_tuiles) :
         self.set = lst_tuiles

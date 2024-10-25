@@ -27,4 +27,5 @@ class Tuile :
     def __str__(self) :
         ajout = (len(str(self.value))%2)*" "
         return f"{csts.colors_code[self.color_name()]} {ajout}{self.value}{csts.colors_code['reset']}"
+
     

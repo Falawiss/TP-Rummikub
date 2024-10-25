@@ -23,7 +23,6 @@ class Partie :
         - end_manche() : fin de la manche
         - distribuer() : donne les tuiles à chaque joueur en début de partie
         - piocher() : appelle la fonction piocher d'un joueur
-        - poser() : appeller la fonction poser de la table de jeu
     """
     def __init__(self, lst_noms:list, global_layout, table_layout, main_layout, selec_layout) :
         self.joueurs = []
@@ -98,15 +97,16 @@ class Partie :
 
 
     def distribuer(self) :
+        print(self.pioche)
+        print(len(self.pioche.pioche))
         for t in range(14) :
             for j in self.joueurs :
                 j.tirer(1, self.pioche)
+        print(len(self.pioche.pioche))
 
     def piocher(self, joueur) :
         joueur.tirer(1, self.pioche)
-    
-    def poser(self, set) :
-        self.table.poser(set)
+        print(len(self.pioche.pioche))
 
     def aff_tuiles(self, lst_tuiles, layout, loc) :
         self.clear_layout(layout)
@@ -144,6 +144,7 @@ class Partie :
         self.aff_nom.setText(self.joueurs[self.current_j].nom)
         self.aff_tuiles(self.table_virtuel.table, self.table_layout, loc=1)
         self.aff_tuiles(self.choice, self.selec_layout, loc=2)
+        print(self.j_virtuel)
         self.aff_tuiles(self.j_virtuel.main, self.main_layout, loc=3)
 
     def clear_layout(self, layout) :

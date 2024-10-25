@@ -12,6 +12,8 @@ import Interface.csts as csts
 import numpy as np
 from PyQt5.QtWidgets import *
 
+### Ajouter un tri du jeu du joueur et des Sets
+
 def main():
     app = QApplication([])
     window = QWidget()

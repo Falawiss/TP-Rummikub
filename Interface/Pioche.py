@@ -24,3 +24,9 @@ class Pioche :
             tirage = self.pioche[-1]
             self.pioche = self.pioche[:-1]
             return tirage
+        
+    def __str__(self) :
+        txt = ""
+        for t in self.pioche :
+            txt += str(t)
+        return txt

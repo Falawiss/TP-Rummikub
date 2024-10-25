@@ -16,7 +16,7 @@ class Table :
     def __str__(self) :
         txt = f"------------------------\nTable :\n"
         for s in self.table :
-            txt += f"{s.__str__()} \n"
+            txt += str(s) + '\n'
         return txt + "------------------------"
     
     def poser(self, set) :
