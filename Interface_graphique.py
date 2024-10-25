@@ -375,6 +375,8 @@ class Partie :
                                     }
                                 """%csts.colors_name[tuile.color])
             button.setFixedSize(30,50)
+            button.id = 2
+            print(button.id)
             button.clicked.connect(lambda checked, b=button: self.move_button(b, self.main_layout, self.selec_layout))
             self.main_layout.addWidget(button, 1,t)
 
@@ -419,11 +421,15 @@ class Partie :
 
     def move_button(self, button, current_layout, new_layout) :
         # Retirer le bouton du layout actuel
+        print(current_layout.count())
+        print(new_layout.count())
         current_layout.removeWidget(button)
         button.hide()  # Masquer le bouton
 
         # Ajouter le bouton à un autre layout
+        
         new_layout.addWidget(button, 1,new_layout.count()+1)  # new_layout est le layout cible
+        
         button.clicked.connect(lambda checked, b=button: self.move_button(b, new_layout, current_layout))
         button.show()  # Afficher le bouton dans le nouveau layout
 

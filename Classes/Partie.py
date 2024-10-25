@@ -117,7 +117,7 @@ class Partie :
                     print("\n\n -- CHANGEMENT DE JOUEUR -- \n\n")
 
     def end_manche(self) :
-        for j in self.joueur :
+        for j in self.joueurs :
             j.maj_score()
         self.pioche = Pioche()
         self.time = 0.
