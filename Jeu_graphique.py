@@ -12,7 +12,6 @@ import Interface.csts as csts
 import numpy as np
 from PyQt5.QtWidgets import *
 
-### Ajouter un tri du jeu du joueur et des Sets
 
 def main():
     app = QApplication([])
@@ -39,30 +38,31 @@ def open_dialog(Lancer_partie_bouton, global_layout):
         partie = Partie(noms, global_layout, table_layout, main_layout, selec_layout)
 
 def gen_affichage(global_layout) :
-    # Créer un QFrame pour entourer le table_layout avec un contour
+    # Créer un QFrame pour entourer la Table de jeu avec un contour
     table_frame = QFrame()
     table_frame.setFrameShape(QFrame.Box)  # Dessiner un contour
     table_frame.setLineWidth(2)  # Épaisseur du contour
     table_layout = QGridLayout()
     table_frame.setLayout(table_layout)  # Associer le layout au QFrame
 
-    # Créer un QFrame pour entourer le main_layout avec un contour
-    main_frame = QFrame()
-    main_frame.setFrameShape(QFrame.Box)  # Dessiner un contour
-    main_frame.setLineWidth(2)  # Épaisseur du contour
-    main_layout = QGridLayout()
-    main_frame.setLayout(main_layout)  # Associer le layout au QFrame
-
-    # Créer un QFrame pour entourer le main_layout avec un contour
+    # Créer un QFrame pour entourer la sélection de tuiles avec un contour
     selec_frame = QFrame()
-    selec_frame.setFrameShape(QFrame.Box)  # Dessiner un contour
-    selec_frame.setLineWidth(2)  # Épaisseur du contour
+    selec_frame.setFrameShape(QFrame.Box) 
+    selec_frame.setLineWidth(2)  
     selec_layout = QGridLayout()
-    selec_frame.setLayout(selec_layout)  # Associer le layout au QFrame
+    selec_frame.setLayout(selec_layout) 
 
-    global_layout.addWidget(table_frame,1,1)
-    global_layout.addWidget(selec_frame,2,1)
-    global_layout.addWidget(main_frame,3,1)
+    # Créer un QFrame pour entourer la main du joueur avec un contour
+    main_frame = QFrame()
+    main_frame.setFrameShape(QFrame.Box) 
+    main_frame.setLineWidth(2) 
+    main_layout = QGridLayout()
+    main_frame.setLayout(main_layout)  
+    
+    # Ajout des layouts au global layout
+    global_layout.addWidget(table_frame,1,1,2,1)
+    global_layout.addWidget(selec_frame,3,1)
+    global_layout.addWidget(main_frame,4,1)
 
     return global_layout, table_layout, main_layout, selec_layout
 

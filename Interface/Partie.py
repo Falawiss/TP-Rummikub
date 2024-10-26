@@ -43,14 +43,17 @@ class Partie :
 
         validation_button = QPushButton("Valider le Set")
         validation_button.clicked.connect(self.validation_set)
-        global_layout.addWidget(validation_button,2,2)
+        global_layout.addWidget(validation_button,3,2)
 
         fintour_button = QPushButton("Fin du tour")
         fintour_button.clicked.connect(self.tour_suivant)
-        global_layout.addWidget(fintour_button,3,2)
+        global_layout.addWidget(fintour_button,4,2)
 
-        self.aff_nom = QLabel("Test")
-        self.global_layout.addWidget(self.aff_nom, 4,2)
+        self.aff_nom = QLabel("Joueur : ")
+        self.global_layout.addWidget(self.aff_nom, 1,2)
+
+        self.aff_score = QLabel("Score : ")
+        self.global_layout.addWidget(self.aff_score, 2,2)
 
         self.manche = 0
         self.start_manche()
@@ -141,7 +144,8 @@ class Partie :
                                         """%csts.colors_name[tuile.color])
                 layout.addWidget(button, s,t+1)
     def maj_aff(self) :
-        self.aff_nom.setText(self.joueurs[self.current_j].nom)
+        self.aff_nom.setText(f"Joueur : {self.joueurs[self.current_j].nom}")
+        self.aff_score.setText(f"Score : {self.joueurs[self.current_j].score}")
         self.aff_tuiles(self.table_virtuel.table, self.table_layout, loc=1)
         self.aff_tuiles(self.choice, self.selec_layout, loc=2)
         print(self.j_virtuel)
@@ -161,6 +165,7 @@ class Partie :
         elif loc == 2 :
             self.j_virtuel.main.append(self.choice[idx[1]])
             self.choice = list(np.delete(self.choice, idx[1]))
+
 
         self.maj_aff()
 

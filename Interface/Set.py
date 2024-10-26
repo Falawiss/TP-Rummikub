@@ -60,8 +60,19 @@ class Set :
         self.reset_vc(n_set)
         self.check_set()
 
-    #def sort(self) : 
-        
+    def sort(self) :
+        n_vc = [[],[]]
+        set_sorted = []
+        for c in np.unique(self.vc[1]) :
+            val = np.sort(self.vc[0][self.vc[1] == c])
+            for v in val :
+                set_sorted.append(Tuile(v, c))
+                n_vc[0].append(v)
+                n_vc[1].append(c)
+
+
+        self.set = set_sorted
+        self.vc = n_vc
 
 
     def reset_vc(self, lst_tuiles) :

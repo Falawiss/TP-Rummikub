@@ -33,7 +33,7 @@ class Joueur :
             tirage = pioche.tirer()
             self.main.append(tirage)
         self.nettoyer_main()
-        #self.sort()
+        self.sort()
 
     def maj_score(self) :
         for t in self.main :
@@ -67,4 +67,18 @@ class Joueur :
         n_j = Joueur(self.nom)
         n_j.main = self.main.copy()
         return n_j
+    
+    def sort(self) :
+        values = np.array([t.value for t in self.main])
+        colors = np.array([t.color for t in self.main])
+
+        main_sorted = []
+        for c in np.unique(colors) :
+            val = np.sort(values[colors == c])
+            for v in val :
+                main_sorted.append(Tuile(v, c))
+
+        self.main = main_sorted
+        
+
     
