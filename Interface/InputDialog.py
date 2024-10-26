@@ -5,7 +5,7 @@ class InputDialog(QDialog):
         super().__init__()
         self.setWindowTitle("Entrée de texte")
         
-        # Initialiser une liste pour stocker les entrées
+        # Initialiser une liste pour stocker les noms
         self.entries = []
 
         # Créer un layout vertical

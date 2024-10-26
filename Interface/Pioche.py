@@ -9,6 +9,7 @@ class Pioche :
     Methodes :
         - __init__() : création de la pioche, et mélanger
         - tirer() : tirer une tuile de la pioche, et l'enlever de la liste
+        - __str__() : permet d'afficher les tuiles de la pioche
     """
     def __init__(self) :
         self.pioche = []

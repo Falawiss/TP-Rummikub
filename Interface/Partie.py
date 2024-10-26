@@ -1,9 +1,10 @@
-from Interface.csts import *
-from Interface.Pioche import *
-from Interface.Tuile import *
-from Interface.Set import *
-from Interface.Joueur import *
-from Interface.Table import *
+from Interface.csts import * # Constantes du jeu
+from Interface.Pioche import * # Pile de tuiles de départ
+from Interface.Tuile import * # Défintion d'une tuile
+from Interface.Set import * # Un groupe de tuile respectant des règles particulières
+from Interface.Joueur import * # Un joueur de la partie
+from Interface.Table import * # Support des Sets posés par les joueurs
+from Interface.InputDialog import * # Fenêtre pour insérer les noms des joueurs
 
 import numpy as np
 from PyQt5.QtWidgets import *
@@ -19,10 +20,16 @@ class Partie :
         - time : float
     Methodes :
         - __init__() : création de la partie
-        - start_manche() : Lance une manche et gère toutes les actions des joueurs
+        - start_manche() : Lance une manche, et prépre le premier tour
+        - tour_suivant() : gère les actions à réaliser à chaque tour
         - end_manche() : fin de la manche
         - distribuer() : donne les tuiles à chaque joueur en début de partie
         - piocher() : appelle la fonction piocher d'un joueur
+        - aff_tuiles() : affiche une liste de tuiles ou de sets dans un layout donné
+        - maj_aff() : Mets à jour l'affichage de chaque zone (main, choix, table)
+        - clear_layout() : efface tous les éléments d'un layout donné
+        - move_tuile() : déplace une tuile d'un stockage vers un autre
+        - validation_set() : valide le choix et l'ajoute à la table (si validé)
     """
     def __init__(self, lst_noms:list, global_layout, table_layout, main_layout, selec_layout) :
         self.joueurs = []

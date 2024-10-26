@@ -17,6 +17,7 @@ class Joueur :
         - reset_num_tour() : remise à zero du compteur de tour
         - nettoyer_main() : Nettoie la liste de tuiles des valeurs None
         - copy() :  Renvoie une copie de l'objet
+        - sort() : arrange la main par couleur et valeur
     """
     def __init__(self, nom) :
         if type(nom) == str :

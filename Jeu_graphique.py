@@ -1,21 +1,22 @@
-from Interface.csts import *
-from Interface.Pioche import *
-from Interface.Tuile import *
-from Interface.Set import *
-from Interface.Joueur import *
-from Interface.Table import *
-from Interface.InputDialog import *
+from Interface.csts import * # Constantes du jeu
+from Interface.Pioche import * # Pile de tuiles de départ
+from Interface.Tuile import * # Défintion d'une tuile
+from Interface.Set import * # Un groupe de tuile respectant des règles particulières
+from Interface.Joueur import * # Un joueur de la partie
+from Interface.Table import * # Support des Sets posés par les joueurs
+from Interface.InputDialog import * # Fenêtre pour insérer les noms des joueurs
 
-from Interface.Partie import *
+from Interface.Partie import * # Module qui gère la partie et les interactions
 
-import Interface.csts as csts
-import numpy as np
+import numpy as np 
 from PyQt5.QtWidgets import *
 
 
 def main():
+    # Création de la fenêtre 
     app = QApplication([])
     window = QWidget()
+    window.setWindowTitle("Rummikub")
     global_layout = QGridLayout()
 
     # Bouton pour lancer la partie
@@ -23,6 +24,7 @@ def main():
     Lancer_partie_bouton.clicked.connect(lambda b=Lancer_partie_bouton: open_dialog(Lancer_partie_bouton, global_layout))
     global_layout.addWidget(Lancer_partie_bouton, 1, 1)
 
+    # Affichage de la Première fenêtre
     window.setLayout(global_layout)
     window.show()
     app.exec()
