@@ -20,6 +20,9 @@ class Joueur :
         - sort() : arrange la main par couleur et valeur
     """
     def __init__(self, nom) :
+        """
+        Création du joueur
+        """
         if type(nom) == str :
             self.nom = nom
         else :
@@ -30,6 +33,9 @@ class Joueur :
 
 
     def tirer(self, nb_tuiles:int, pioche) :
+        """
+        Tire une tuile de la pioche, l'ajoute à sa main et range la main
+        """
         for t in range(nb_tuiles) :
             tirage = pioche.tirer()
             self.main.append(tirage)
@@ -37,6 +43,10 @@ class Joueur :
         self.sort()
 
     def maj_score(self) :
+        """
+        Mise à jour du score en fonction des tuiles dans la main
+        !!! efface la main ensuite
+        """
         for t in self.main :
             if t.value == 0 :
                 self.score += 30
@@ -45,6 +55,9 @@ class Joueur :
         self.main = []
 
     def __str__(self) :
+        """
+        Affichage des informations du joueur dans la console
+        """
         txt = f"{self.nom} | Tour n°{self.num_tour}\nscore : {self.score} \nmain : \n|"
         for i in range(1,len(self.main)+1) :
             ajout = (len(str(i))%2)*" "
@@ -55,9 +68,15 @@ class Joueur :
         return txt
     
     def reset_num_tour(self) :
+        """
+        Réinitialisation du numéro de tour
+        """
         self.num_tour = 0
 
     def nettoyer_main(self) :
+        """
+        Nettoie la main des valeurs None
+        """
         nouvelle_main = []
         for t in self.main :
             if t != None :
@@ -65,14 +84,21 @@ class Joueur :
         self.main = nouvelle_main
 
     def copy(self) :
+        """
+        Renvoie une copie de l'objet joueur
+        """
         n_j = Joueur(self.nom)
         n_j.main = self.main.copy()
+        n_j.num_tour = self.num_tour
+        n_j.score = self.score
         return n_j
     
     def sort(self) :
+        """
+        Organise la main du joueur par couleur puis par valeur
+        """
         values = np.array([t.value for t in self.main])
         colors = np.array([t.color for t in self.main])
-
         main_sorted = []
         for c in np.unique(colors) :
             val = np.sort(values[colors == c])

@@ -1,3 +1,4 @@
+# Noms des couleurs en fonction de leur index
 colors_name = {
     0 : 'purple',
     1 : 'red' ,
@@ -7,6 +8,7 @@ colors_name = {
     None : 'None'
 }
 
+# Code correspondant aux couleurs pour l'affichage console
 colors_code = {
     'purple' : '\033[35m',
     'red' : '\033[91m',
